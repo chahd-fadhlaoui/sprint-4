@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+	<meta charset="utf-8">
+	<title>Ajout des Voyages</title>
+	<link rel="stylesheet" type="text/css" href="webjars/bootstrap/4.3.1/css/bootstrap.min.css" />
+</head>
+
+<body>
+	<div th:replace="template"></div>
+	<div class="container mt-5">
+		<div class="card">
+			<div class="card-header" th:if="${mode=='new'}"> Ajout des Voyages </div>
+			<div class="card-header" th:if="${mode=='edit'}">Modification des Voyages </div>
+			<div class="card-body">
+				<form th:action="@{saveVoyage}" method="post">
+					<input  hidden name="page" class="form-control" th:value="${page}" />
+					<input hidden name="size" class="form-control" th:value="${size}" />
+
+					<div class="form-group">
+						<label class="control-label" hidden>ID Voyage :</label>
+						<input type="hidden" name="idVoyage" class="form-control" th:value="${voyage.idVoyage}" />
+					</div>
+					<div class="form-group">
+						<label class="control-label">Nom Voyage :</label>
+						<input type="text" name="nomVoyage" class="form-control" th:value="${voyage.nomVoyage}" />
+						<span th:errors="${voyage.nomVoyage}" class="text-danger"></span>
+
+					</div>
+					<div class="form-group">
+						<label class="control-label">Prix Voyage :</label>
+						<input type="text" name="prixVoyage" class="form-control" th:value="${voyage.prixVoyage}" />
+						<span th:errors="${voyage.prixVoyage}" class="text-danger"></span>
+
+					</div>
+					<div class="form-group">
+						<label class="control-label">Date de voyage :</label>
+						<input type="date" name="dateVoyage" class="form-control" th:value="${voyage.dateVoyage}" />
+						<span th:errors="${voyage.dateVoyage}" class="text-danger"></span>
+
+					</div>
+					<div class="form-group">
+						<label class="control-label">Classe :</label>
+						<select name="classe" class="form-control" th:value="${voyage.classe.idCl}"
+							th:if="${!#strings.isEmpty(voyage.classe)}">
+							<option th:each="c : ${classes}" th:if="${mode=='edit'}" th:value="${c.idCl}"
+								th:text="${c.nomCl}" th:selected="${c.idCl == voyage.classe.idCl}">
+							</option>
+						</select>
+						<!-- S'il s'agit d'un ajout (mode == new) ou d'une modification d'un voyage ayant une classe null -->
+						<select name="classe" class="form-control" th:if="${#strings.isEmpty(voyage.classe)}">
+							<option th:each="c : ${classes}" th:value="${c.idCl}" th:text="${c.nomCl}">
+							</option>
+						</select>
+					</div>
+
+					<div>
+						<button type="submit" class="btn btn-primary">Valider</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>
